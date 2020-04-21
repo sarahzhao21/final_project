@@ -2,6 +2,8 @@
 ##### Name: Xinyi Zhao ##########
 ##### Uniqname:  xinyiz #########
 #################################
+##### For submission    #########
+#################################
 
 from bs4 import BeautifulSoup
 import requests
@@ -80,6 +82,18 @@ def make_url_request_using_cache(url, cache):
 
  
 def get_booksite_dic(base_url):
+    ''' Web scraping and crawling on New York Time Best Seller home page and get the web url of each book category
+    
+    Parameters
+    ----------
+    base_url: str
+        the basic url of New York Time Best Seller home page
+    
+    Returns
+    -------
+    booksite_dic: dict
+        a dictionary with each book category as the key and it's url as the value
+    '''
     url_text = make_url_request_using_cache(base_url, CACHE_DICT)
     soup = BeautifulSoup(url_text, 'html.parser')
     booksite_dic = {}
@@ -93,6 +107,18 @@ def get_booksite_dic(base_url):
     return booksite_dic
 
 def get_bookinfo_list(booksite_dic):
+    ''' Web scraping and crawling on the webpages of the books in each category, get the detailed information of each book
+    
+    Parameters
+    ----------
+    booksite_dic: dict
+        the dictionary with the url of each book category
+    
+    Returns
+    -------
+    book_list: list
+        a nested list with the information of the books, the information of each book is saved as a list
+    '''
     book_list = []
     i = 1
     for key,value in booksite_dic.items():
@@ -106,7 +132,7 @@ def get_bookinfo_list(booksite_dic):
             # bookinfo = book.find('div', class_="css-xe4cfy")
             category = key
             title = book.find('h3', itemprop="name").text.strip()
-            author = book.find('p', itemprop="author").text.strip()[3:]
+            author = book.find('p', itemprop="author").text.strip()
             publisher = book.find('p', itemprop="publisher").text.strip()
             description = book.find('p', itemprop="description").text.strip()
             rank = j
@@ -119,7 +145,7 @@ def get_bookinfo_list(booksite_dic):
             # book_row.append(bookId)
             book_row.append(title)
             book_row.append(category)
-            book_row.append(author)
+            book_row.append(author[3:])
             book_row.append(publisher)
             book_row.append(rank)
             if week == 'New':
@@ -134,6 +160,20 @@ def get_bookinfo_list(booksite_dic):
     return book_list
             
 def build_date(date1, date2):
+    ''' Turn the date information into a nice string 
+    
+    Parameters
+    ----------
+    date1: str
+        the original year information 
+    date2: str
+        the original month and day information
+        
+    Returns
+    -------
+    date_string: str
+        a new form of date look like'yyyy_mm_dd'
+    '''
     m = date2.split(' ')[0]
     d = date2.split(' ')[1]
     if m == 'January':
@@ -170,6 +210,19 @@ def build_date(date1, date2):
       
 
 def get_applebook_list(book_list):
+    ''' by the "Apple Books' url of each book, do web scraping on 'Apple Books' for each book from book_list, 
+    get the detailed information of each book on 'Apple Books'
+    
+    Parameters
+    ----------
+    book_list: list
+        the nested list with the information of each book
+    
+    Returns
+    -------
+    apple_list: list
+        a nested list with the information of the books on 'Apple Books', the information of each book is saved as a single list
+    '''
     apple_urls = []
     apple_list = []
     for book in book_list:
@@ -252,6 +305,19 @@ def get_applebook_list(book_list):
     return apple_list
 
 def creat_book_table(list1, list2):
+    ''' Based on the information of two lists, create a sqlite file with two tables in it
+    
+    Parameters
+    ----------
+    list1: list
+        the information of the books from New York Time Best Sellers
+    list2: list
+        the informaiton of the books from 'Apple Books'
+
+    Returns
+    -------
+        None
+    '''
     conn = sqlite3.connect("best_seller_books.sqlite")
     cur = conn.cursor()
     drop_bestseller = '''
@@ -281,7 +347,7 @@ def creat_book_table(list1, list2):
         'Rating' REAL,
         'Price' REAL,
         'Genre' TEXT,
-        'Realized_date' TEXT,
+        'Released_date' TEXT,
         'Language' TEXT,
         'Length' INTEGER,
         'Seller' TEXT,
