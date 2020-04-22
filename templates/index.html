@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF8"/>
+    <title>New York Time Best Seller Books Home</title>
+</head>
+<body>
+    <h1>Welcome to the New York Time Best Seller Books!</h1>
+
+    <form action='/results' method='POST'>
+
+    <p>
+        Filter by categroy: <br/>
+        <select name='category'>
+            <option value='All'>All categories</option>
+            <option value='combined-print-and-e-book-fiction'>Print&Ebook-Fiction</option>
+            <option value='combined-print-and-e-book-nonfiction'>Print&Ebook-nonFiction</option>
+            <option value='hardcover-fiction'>Hardcover-Fiction</option>
+            <option value='hardcover-nonfiction'>Hardcover-nonFiction</option>
+            <option value='trade-fiction-paperback'>Paperback-Fiction</option>
+            <option value='paperback-nonfiction'>Paperback_nonFiction</option>
+            <option value='advice-how-to-and-miscellaneous'>Advice</option>
+            <option value='childrens-middle-grade-hardcover'>Childen-MiddleGrade</option>
+            <option value='picture-books'>Picture-Books</option>
+            <option value='series-books'>Series-Books</option>
+            <option value='young-adult-hardcover'>Young-Adult</option>
+        </select>
+    </p>
+
+    <p>
+    Sort by: <br/>
+        <input type='radio' name='sort' 
+                value='Rank' checked='checked'/> Rank <br/>
+        <input type='radio' name='sort' 
+                value='Rating'/> Rating <br/>
+        <input type='radio' name='sort' 
+                value='Weeks_on_the_list'/> Weeks_on_the_list <br/>        
+        <input type='radio' name='sort' 
+                value='Price'/> Price <br/>
+        <input type='radio' name='sort' 
+                value='Length'/> Length<br/>
+    </p>
+
+    <p>
+    Sort direction: <br/>
+        <input type='radio' name='dir'
+            value='desc' checked='checked'/>High to Low<br/>
+        <input type='radio' name='dir'
+            value='asc'/>Low to High<br/>
+    </p>
+
+    
+    <p>
+        <input type='checkbox' name='plot'/>Plot results?<br/>
+    </p>
+
+    <input type='submit' value='Get Results'/>
+
+    </form>
+
+</body>
+</html>
